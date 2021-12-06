@@ -14,13 +14,13 @@
           >
             <div id="inner">
               <v-list-item
-                v-for="(item, i) in innerList"
+                v-for="(item, i) in bids"
                 :key="i"
                 :id="`li_${item}`"
                 dense
               >
                 <v-list-item-content>
-                  <v-list-item-title v-text="item"></v-list-item-title>
+                   <v-list-item-title  >{{item.value}}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </div>
@@ -29,9 +29,7 @@
       </v-card-text>
 
       <v-footer class="bottom_footer">
-        <v-btn color="green" :disabled="emptyBid">{{
-          btntext
-        }}</v-btn>
+        <v-btn color="green" :disabled="emptyBid">{{ btntext }}</v-btn>
       </v-footer>
     </v-card>
   </v-col>
@@ -41,26 +39,25 @@
 import _ from "lodash";
 export default {
   components: {},
-  props: ["name"],
+  props: ["name", "bids"],
 
   data() {
     return {
       selectedSellingBid: null,
-      innerList: _.map(_.range(12), (i) => _.random(50, 120)),
     };
   },
   computed: {
-    emptyBid(){
-        return _.isNil(this.selectedSellingBid)
-      },
+    emptyBid() {
+      return _.isNil(this.selectedSellingBid);
+    },
     selectedBidValue() {
-      return this.innerList[this.selectedSellingBid];
+      return this.bids[this.selectedSellingBid];
     },
     btntext() {
       if (this.emptyBid) {
         return "Buy";
       } else {
-        return `Buy 1 ${this.name} for ${this.selectedBidValue}`;
+        return `Buy 1 ${this.name} for ${this.selectedBidValue.value}`;
       }
     },
   },

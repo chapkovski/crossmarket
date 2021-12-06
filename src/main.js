@@ -1,15 +1,27 @@
-import Vue from 'vue'
-import './plugins/axios'
-import App from './App.vue'
-import store from './store'
-import vuetify from './plugins/vuetify'
-import router from './router'
+import Vue from "vue";
+import "./plugins/axios";
+import App from "./App.vue";
+import store from "./store";
+import vuetify from "./plugins/vuetify";
+import router from "./router";
+import VueNativeSock from "vue-native-websocket";
 
-Vue.config.productionTip = false
+const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+const ws_path = ws_scheme + "://" + window.location.host + window.socket_path;
+
+Vue.use(VueNativeSock, ws_path, {
+  store: store,
+  format: "json",
+  reconnection: true,
+  reconnectionAttempts: 5,
+  reconnectionDelay: 3000,
+});
+
+Vue.config.productionTip = false;
 
 new Vue({
   store,
   vuetify,
   router,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

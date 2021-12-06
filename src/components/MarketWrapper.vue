@@ -1,12 +1,8 @@
 <template>
   <v-card class="v-100" fill-height style="height:90vh">
     <v-toolbar height="80">
-      <v-sheet
-        class="mx-1 d-flex rounded-l-xl font-weight-bold  "
-        outlined
-       
-      >
-       <v-list-item>Market {{ name }}.</v-list-item>
+      <v-sheet class="mx-1 d-flex rounded-l-xl font-weight-bold  " outlined>
+        <v-list-item>Market {{ name }}.</v-list-item>
       </v-sheet>
       <v-sheet class="mx-0 d-flex " outlined>
         <v-list-item>
@@ -28,7 +24,7 @@
           </v-list-item-action>
         </v-list-item>
       </v-sheet>
-      
+
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
@@ -90,8 +86,8 @@
     <v-row
       style="height:calc(100vh - 150px);margin-top:10px;margin-bottom:10px"
     >
-      <buy-bid-list :name='name'></buy-bid-list>
-      <sell-bid-list :name='name'></sell-bid-list>
+      <buy-bid-list :name="name" :bids="buyingBids"></buy-bid-list>
+      <sell-bid-list :name="name" :bids="sellingBids"></sell-bid-list>
     </v-row>
   </v-card>
 </template>
@@ -102,7 +98,7 @@ import BuyBidList from "@/components/BuyBidList.vue";
 import SellBidList from "@/components/SellBidList.vue";
 import MakeBid from "@/components/MakeBid.vue";
 import _ from "lodash";
-
+import { mapGetters } from "vuex";
 export default {
   props: ["name", "stocksData"],
   components: {
@@ -116,7 +112,7 @@ export default {
     return {
       selectedItem: null,
       selectedSellingBid: null,
-      items: _.range(1, 100),
+
       dialog: false,
 
       items: [
@@ -125,6 +121,15 @@ export default {
         { text: "Current stock price", icon: "mdi-hand-coin", value: 11.234 },
       ],
     };
+  },
+  computed: {
+    ...mapGetters(["filteredBids"]),
+    buyingBids() {
+      return this.filteredBids({ market: this.name, type: "buy" });
+    },
+    sellingBids() {
+      return this.filteredBids({ market: this.name, type: "sell" });
+    },
   },
 };
 </script>
