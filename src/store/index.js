@@ -5,6 +5,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    merged: Boolean(window.merged),
+    player_id:window.player_id,
+    total:status.total,
+    market_A : status.A,
+    market_B:status.B,
     bids: [],
 
     socket: {
@@ -22,6 +27,9 @@ export default new Vuex.Store({
   mutations: {
     SET_BIDS(state, bids) {
       state.bids = bids;
+    },
+    ADD_BID(state, bid) {
+      state.bids.push(bid);
     },
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;
@@ -55,6 +63,10 @@ export default new Vuex.Store({
       console.debug(serverMsg);
       const { bids } = serverMsg;
       context.commit("SET_BIDS", bids);
+    },
+    addBid(context, serverMsg) {
+      const { bid } = serverMsg;
+      context.commit("ADD_BID", bid);
     },
     sendMessage: async function(context, message) {
       await Vue.prototype.$socket.sendObj({ ...message });

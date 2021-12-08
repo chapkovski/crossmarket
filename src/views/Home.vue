@@ -14,7 +14,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                $44.2
+                ${{market_A.stock_value}}
               </div>
             </div>
           </v-sheet>
@@ -24,7 +24,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                $123
+                ${{market_A.cash}}
               </div>
             </div>
           </v-sheet>
@@ -34,7 +34,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-                $167.2
+               ${{market_A.total}}
               </div>
             </div>
           </v-sheet>
@@ -51,7 +51,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                $21.0
+                ${{market_B.stock_value}}
               </div>
             </div>
           </v-sheet>
@@ -61,7 +61,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                $456
+                   ${{market_A.cash}}
               </div>
             </div>
           </v-sheet>
@@ -71,7 +71,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-                $477.0
+               ${{market_B.total}}
               </div>
             </div>
           </v-sheet>
@@ -86,7 +86,7 @@
             <div
               class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
             >
-              $65.2
+              ${{total.stock_value}}
             </div>
           </div>
         </v-sheet>
@@ -96,7 +96,7 @@
             <div
               class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
             >
-              $468
+              ${{total.cash}}
             </div>
           </div>
         </v-sheet>
@@ -106,7 +106,7 @@
             <div
               class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
             >
-              $533.2
+              ${{total.total}}
             </div>
           </div>
         </v-sheet>
@@ -118,10 +118,10 @@
     <v-main>
       <v-row fill-height class="d-flex align-stretch" style="height:100%">
         <v-col cols="6">
-          <market name="A" :stocksData="{ q: 2, price: 22.1, totalV: 44.2 }" />
+          <market name="A" :stocksData="{ q: market_A.shares, price: market_A.price ,money:availableMoney('A') }" />
         </v-col>
         <v-col cols="6">
-          <market name="B" :stocksData="{ q: 10, price: 2.1, totalV: 21.0 }" />
+          <market name="B" :stocksData="{ q: market_B.shares, price: market_B.price, money:availableMoney('B') }" />
         </v-col>
       </v-row>
     </v-main>
@@ -138,11 +138,13 @@ export default {
   data: () => ({
     cards: ["Today", "Yesterday"],
     innerList: _.range(1, 10),
-    merged: Boolean(window.merged),
+    
     drawer: null,
+
+    
   }),
   computed: {
-    ...mapState(["socket"]),
+    ...mapState(["socket",'total', 'market_A', 'market_B', 'merged']),
   },
   watch: {
     socket(v) {
@@ -153,7 +155,7 @@ export default {
     },
     innerList: function() {
       const newone = _.last(this.innerList);
-      console.debug("NEWONE!!!", newone);
+      
       this.$nextTick(function() {
         const el = document.getElementById(`li_${newone}`);
 
@@ -184,6 +186,14 @@ export default {
   },
   methods: {
     ...mapActions(["sendMessage"]),
+    availableMoney(market){
+      if (this.merged){return this.total.cash } else 
+      {
+        if (market=='A') {return this.market_A.cash };
+        if (market=='B') {return this.market_B.cash }; 
+
+       }
+    },
     scrollToEnd: function() {
       var container = this.$el.querySelector("#sellcontainer");
 

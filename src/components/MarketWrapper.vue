@@ -58,6 +58,7 @@
               </v-list-item-group>
             </v-list>
             <v-text-field
+              v-model='bidValue'
               label="Price"
               solo
               placeholder="Price"
@@ -72,10 +73,10 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="orange" @click="dialog = false" outlined>
+            <v-btn color="orange" @click="putBuyOrder" outlined>
               Buy order
             </v-btn>
-            <v-btn color="green" @click="dialog = false" outlined>
+            <v-btn color="green" @click="putSellOrder" outlined>
               Sell order
             </v-btn>
           </v-card-actions>
@@ -98,7 +99,7 @@ import BuyBidList from "@/components/BuyBidList.vue";
 import SellBidList from "@/components/SellBidList.vue";
 import MakeBid from "@/components/MakeBid.vue";
 import _ from "lodash";
-import { mapGetters } from "vuex";
+import { mapGetters ,mapActions,mapState} from "vuex";
 export default {
   props: ["name", "stocksData"],
   components: {
@@ -112,18 +113,19 @@ export default {
     return {
       selectedItem: null,
       selectedSellingBid: null,
-
+      bidValue:null,
       dialog: false,
 
       items: [
-        { text: "Money available", icon: "mdi-account", value: 20 },
-        { text: "Stocks you own", icon: "mdi-cash-fast", value: 12 },
-        { text: "Current stock price", icon: "mdi-hand-coin", value: 11.234 },
+        { text: "Money available", icon: "mdi-account", value: this.stocksData.money },
+        { text: "Stocks you own", icon: "mdi-cash-fast", value: this.stocksData.q },
+        { text: "Current stock price", icon: "mdi-hand-coin", value: this.stocksData.price },
       ],
     };
   },
   computed: {
     ...mapGetters(["filteredBids"]),
+    ...mapState(["player_id"]),
     buyingBids() {
       return this.filteredBids({ market: this.name, type: "buy" });
     },
@@ -131,6 +133,24 @@ export default {
       return this.filteredBids({ market: this.name, type: "sell" });
     },
   },
+  methods:{
+    ...mapActions(["sendMessage"]),
+    async putOrder(orderType){
+        await this.sendMessage({action:'addBid', 
+      type:orderType, 
+      value:this.bidValue, 
+      trader_id:this.player_id,
+       market:this.name
+       })
+       this.bidValue=null;
+      this.dialog = false;
+    },
+
+    async putBuyOrder(){
+    await  this.putOrder('buy')},
+    
+    async putSellOrder(){await  this.putOrder('sell')}
+  }
 };
 </script>
 <style>
