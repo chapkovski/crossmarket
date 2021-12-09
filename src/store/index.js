@@ -19,8 +19,32 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    get_cash:(state)=>(market)=>{
-      if (state.merged){return state.total.cash }
+    total_in_market: (state, getters) => (market) => {
+      const stock_value = getters.stock_value_by_market(market);
+      const cash = state[`market_${market}`].cash;
+      return stock_value + cash;
+    },
+    total_in_both_markets: (state, getters) => () => {
+      const A = getters.total_in_market("A");
+      const B = getters.total_in_market("A");
+      return A + B;
+    },
+    stock_value_by_market: (state) => (market) => {
+      const marketObj = state[`market_${market}`];
+      const shares = marketObj.shares;
+      const price = marketObj.price;
+      return shares * price;
+    },
+
+    total_stock_value: (state, getters) => () => {
+      const A = getters.stock_value_by_market("A");
+      const B = getters.stock_value_by_market("B");
+      return A + B;
+    },
+    get_cash: (state) => (market) => {
+      if (state.merged) {
+        return state.total.cash;
+      }
       if (market === "A") {
         return state.market_A.cash;
       }
@@ -103,12 +127,11 @@ export default new Vuex.Store({
       context.commit("ADD_BID", bid);
     },
     removeBid(context, serverMsg) {
-      console.debug("WE R IN REMOVAL", serverMsg);
-      const { bid_id } = serverMsg;
+      const { bid_id, market, price } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
+      context.commit("UPDATE_PRICE", { market, price });
     },
     remove_and_update(context, serverMsg) {
-      console.debug("WE R IN REMOVAL and UPDATER", serverMsg);
       const { bid_id, status } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
       context.commit("UPDATE_STATUS", status);

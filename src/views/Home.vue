@@ -14,7 +14,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                ${{ market_A.stock_value }}
+                ${{ stock_value_by_market("A") }}
               </div>
             </div>
           </v-sheet>
@@ -34,7 +34,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-                ${{ market_A.total }}
+                ${{ total_in_market('A') }}
               </div>
             </div>
           </v-sheet>
@@ -51,7 +51,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                ${{ market_B.stock_value }}
+                ${{ stock_value_by_market("B") }}
               </div>
             </div>
           </v-sheet>
@@ -71,7 +71,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-                ${{ market_B.total }}
+                ${{ total_in_market('B')}}
               </div>
             </div>
           </v-sheet>
@@ -92,7 +92,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                ${{ total.stock_value }}
+                ${{ total_stock_value }}
               </div>
             </div>
           </v-sheet>
@@ -112,7 +112,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-                ${{ total.total }}
+                ${{ total_in_both_markets}}
               </div>
             </div>
           </v-sheet>
@@ -151,7 +151,7 @@
 <script>
 import _ from "lodash";
 import Market from "@/components/MarketWrapper";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapGetters } from "vuex";
 import TransactionPrices from "@/components/TransactionPrices.vue";
 export default {
   components: { Market, TransactionPrices },
@@ -162,6 +162,7 @@ export default {
     drawer: null,
   }),
   computed: {
+    ...mapGetters(["stock_value_by_market", "total_stock_value","total_in_market", "total_in_both_markets"]),
     ...mapState(["socket", "total", "market_A", "market_B", "merged"]),
   },
   watch: {
