@@ -12,7 +12,7 @@ export default new Vuex.Store({
     market_B: status.B,
     bids: [],
     // TODO: this should be retrieved differently.
-    priceHistory: { A: [status.A.price], B: [status.B.price] },
+    priceHistory: window_history,
 
     socket: {
       isConnected: false,

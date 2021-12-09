@@ -42,18 +42,33 @@ export default {
 
         series: [
           { name: "A", type: "spline", data: this.seriesA },
-          { name: "B", type: "spline", data:  this.seriesB },
+          { name: "B", type: "spline", data: this.seriesB },
         ],
       },
     };
   },
+  watch: {
+    priceHistory() {
+      console.debug("SOME THINGSNAGES???");
+      this.$nextTick(() => {
+        this.$refs.priceGraph.chart.setSize(
+          window.inneWidth - 100,
+          window.innerHeight - 150
+        );
+        this.$refs.priceGraph.chart.reflow();
+      });
+    },
+  },
   computed: {
     ...mapState(["priceHistory"]),
-    seriesA(){return this.priceHistory.A},
-    seriesB(){return this.priceHistory.B},
+    seriesA() {
+      return this.priceHistory.A;
+    },
+    seriesB() {
+      return this.priceHistory.B;
+    },
   },
-  async mounted() {
-    
+  mounted() {
     // const appleurl =
     //   "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/aapl-c.json";
     // const googleurl =
@@ -64,8 +79,11 @@ export default {
     this.chartOptions.series[1].data = this.seriesB;
 
     this.$nextTick(() => {
-      this.$refs.priceGraph.chart.setSize(null, window.innerHeight - 150);
-      // this.$refs.priceGraph.chart.reflow();
+      this.$refs.priceGraph.chart.setSize(
+        window.inneWidth - 100,
+        window.innerHeight - 150
+      );
+      this.$refs.priceGraph.chart.reflow();
     });
   },
 };
