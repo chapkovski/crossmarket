@@ -19,6 +19,15 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    get_cash:(state)=>(market)=>{
+      if (state.merged){return state.total.cash }
+      if (market === "A") {
+        return state.market_A.cash;
+      }
+      if (market === "B") {
+        return state.market_B.cash;
+      }
+    },
     get_num_shares: (state) => (market) => {
       if (market === "A") {
         return state.market_A.shares;

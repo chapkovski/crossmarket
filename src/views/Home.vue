@@ -14,7 +14,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                ${{market_A.stock_value}}
+                ${{ market_A.stock_value }}
               </div>
             </div>
           </v-sheet>
@@ -24,7 +24,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                ${{market_A.cash}}
+                ${{ market_A.cash }}
               </div>
             </div>
           </v-sheet>
@@ -34,7 +34,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-               ${{market_A.total}}
+                ${{ market_A.total }}
               </div>
             </div>
           </v-sheet>
@@ -51,7 +51,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                ${{market_B.stock_value}}
+                ${{ market_B.stock_value }}
               </div>
             </div>
           </v-sheet>
@@ -61,7 +61,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                   ${{market_A.cash}}
+                ${{ market_B.cash }}
               </div>
             </div>
           </v-sheet>
@@ -71,46 +71,52 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-               ${{market_B.total}}
+                ${{ market_B.total }}
               </div>
             </div>
           </v-sheet>
         </v-sheet>
       </div>
       <div v-if="merged">
-         <v-sheet elevation="3" class="d-flex pa-3 align-center rounded-sm" height="64px">
-        <div class="font-weight-bold mx-1 mr-3">Total markets A and B value:</div>
-        <v-sheet outlined class="d-flex align-center rounded-l-xl pa-2 ">
-          <div class="d-flex align-center  ">
-            In assets:
-            <div
-              class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
-            >
-              ${{total.stock_value}}
-            </div>
+        <v-sheet
+          elevation="3"
+          class="d-flex pa-3 align-center rounded-sm"
+          height="64px"
+        >
+          <div class="font-weight-bold mx-1 mr-3">
+            Total markets A and B value:
           </div>
-        </v-sheet>
-        <v-sheet outlined class="d-flex align-center ml-1 pa-2">
-          <div class="d-flex align-center  ">
-            In cash:
-            <div
-              class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
-            >
-              ${{total.cash}}
+          <v-sheet outlined class="d-flex align-center rounded-l-xl pa-2 ">
+            <div class="d-flex align-center  ">
+              In assets:
+              <div
+                class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
+              >
+                ${{ total.stock_value }}
+              </div>
             </div>
-          </div>
-        </v-sheet>
-         <v-sheet outlined class="d-flex align-center ml-1 pa-2 rounded-r-xl">
-          <div class="d-flex align-center  font-weight-bold ">
-            Total:
-            <div
-              class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
-            >
-              ${{total.total}}
+          </v-sheet>
+          <v-sheet outlined class="d-flex align-center ml-1 pa-2">
+            <div class="d-flex align-center  ">
+              In cash:
+              <div
+                class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
+              >
+                ${{ total.cash }}
+              </div>
             </div>
-          </div>
+          </v-sheet>
+          <v-sheet outlined class="d-flex align-center ml-1 pa-2 rounded-r-xl">
+            <div class="d-flex align-center  font-weight-bold ">
+              Total:
+              <div
+                class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
+              >
+                ${{ total.total }}
+              </div>
+            </div>
+          </v-sheet>
         </v-sheet>
-      </v-sheet>
       </div>
       <v-spacer></v-spacer>
       <transaction-prices></transaction-prices>
@@ -118,10 +124,24 @@
     <v-main>
       <v-row fill-height class="d-flex align-stretch" style="height:100%">
         <v-col cols="6">
-          <market name="A" :stocksData="{ q: market_A.shares, price: market_A.price ,money:availableMoney('A') }" />
+          <market
+            name="A"
+            :stocksData="{
+              q: market_A.shares,
+              price: market_A.price,
+              money: availableMoney('A'),
+            }"
+          />
         </v-col>
         <v-col cols="6">
-          <market name="B" :stocksData="{ q: market_B.shares, price: market_B.price, money:availableMoney('B') }" />
+          <market
+            name="B"
+            :stocksData="{
+              q: market_B.shares,
+              price: market_B.price,
+              money: availableMoney('B'),
+            }"
+          />
         </v-col>
       </v-row>
     </v-main>
@@ -138,13 +158,11 @@ export default {
   data: () => ({
     cards: ["Today", "Yesterday"],
     innerList: _.range(1, 10),
-    
-    drawer: null,
 
-    
+    drawer: null,
   }),
   computed: {
-    ...mapState(["socket",'total', 'market_A', 'market_B', 'merged']),
+    ...mapState(["socket", "total", "market_A", "market_B", "merged"]),
   },
   watch: {
     socket(v) {
@@ -155,7 +173,7 @@ export default {
     },
     innerList: function() {
       const newone = _.last(this.innerList);
-      
+
       this.$nextTick(function() {
         const el = document.getElementById(`li_${newone}`);
 
@@ -186,13 +204,17 @@ export default {
   },
   methods: {
     ...mapActions(["sendMessage"]),
-    availableMoney(market){
-      if (this.merged){return this.total.cash } else 
-      {
-        if (market=='A') {return this.market_A.cash };
-        if (market=='B') {return this.market_B.cash }; 
-
-       }
+    availableMoney(market) {
+      if (this.merged) {
+        return this.total.cash;
+      } else {
+        if (market == "A") {
+          return this.market_A.cash;
+        }
+        if (market == "B") {
+          return this.market_B.cash;
+        }
+      }
     },
     scrollToEnd: function() {
       var container = this.$el.querySelector("#sellcontainer");

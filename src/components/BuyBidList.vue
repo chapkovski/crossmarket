@@ -18,13 +18,19 @@
           >
             <div id="inner">
               <v-list-item
+                :disabled="item.trader == $store.state.player_id"
                 v-for="(item, i) in bids"
                 :key="i"
                 :id="`li_${item}`"
                 dense
               >
                 <v-list-item-content>
-                  <v-list-item-title>{{ item.value }}</v-list-item-title>
+                  <v-list-item-title
+                    >{{ item.value }}
+                    <span v-if="item.trader == $store.state.player_id">
+                      (Your own)</span
+                    >
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </div>
@@ -33,7 +39,6 @@
       </v-card-text>
 
       <v-footer class="bottom_footer">
-        
         <v-btn color="red" :disabled="emptyBid" @click="transact">{{
           btntext
         }}</v-btn>
@@ -60,7 +65,7 @@ export default {
       return this.get_num_shares(this.name);
     },
     emptyBid() {
-      return _.isNil(this.selectedSellingBid) || (this.current_num_shares===0);
+      return _.isNil(this.selectedSellingBid) || this.current_num_shares === 0;
     },
     selectedBidValue() {
       return this.bids[this.selectedSellingBid];
@@ -76,15 +81,25 @@ export default {
   methods: {
     ...mapActions(["sendMessage"]),
     async transact() {
-      if (this.current_num_shares>0){
-      await this.sendMessage({
-        action: "takeBid",
-        bid_id: this.selectedBidValue.id,
-      });
+      if (this.current_num_shares > 0) {
+        await this.sendMessage({
+          action: "takeBid",
+          bid_id: this.selectedBidValue.id,
+        });
       }
       this.selectedSellingBid = null;
     },
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.v-list-item-group .v-list-item--active {
+  color: white;
+
+  background: orange;
+}
+.v-list-item--active .v-list-item__title {
+  font-weight: bolder !important;
+  font-size: 1rem !important;
+}
+</style>
