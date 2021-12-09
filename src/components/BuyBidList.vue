@@ -24,7 +24,7 @@
                 dense
               >
                 <v-list-item-content>
-                  <v-list-item-title  >{{item.value}}</v-list-item-title>
+                  <v-list-item-title>{{ item.value }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </div>
@@ -33,13 +33,17 @@
       </v-card-text>
 
       <v-footer class="bottom_footer">
-        <v-btn color="red" :disabled="emptyBid">{{btntext}}</v-btn>
+        
+        <v-btn color="red" :disabled="emptyBid" @click="transact">{{
+          btntext
+        }}</v-btn>
       </v-footer>
     </v-card>
   </v-col>
 </template>
 
 <script>
+import { mapGetters, mapActions, mapState } from "vuex";
 import _ from "lodash";
 export default {
   components: {},
@@ -48,13 +52,16 @@ export default {
   data() {
     return {
       selectedSellingBid: null,
-      
     };
   },
-    computed: {
-      emptyBid(){
-        return _.isNil(this.selectedSellingBid)
-      },
+  computed: {
+    ...mapGetters(["get_num_shares"]),
+    current_num_shares() {
+      return this.get_num_shares(this.name);
+    },
+    emptyBid() {
+      return _.isNil(this.selectedSellingBid) || (this.current_num_shares===0);
+    },
     selectedBidValue() {
       return this.bids[this.selectedSellingBid];
     },
@@ -64,6 +71,18 @@ export default {
       } else {
         return `Sell 1 ${this.name} for ${this.selectedBidValue.value}`;
       }
+    },
+  },
+  methods: {
+    ...mapActions(["sendMessage"]),
+    async transact() {
+      if (this.current_num_shares>0){
+      await this.sendMessage({
+        action: "takeBid",
+        bid_id: this.selectedBidValue.id,
+      });
+      }
+      this.selectedSellingBid = null;
     },
   },
 };
