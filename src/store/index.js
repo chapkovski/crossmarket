@@ -73,8 +73,8 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    ADD_HISTORY(state, { market, price }) {
-      state.priceHistory[market].push(price);
+    ADD_HISTORY(state, { market, price, history_time }) {
+      state.priceHistory[market].push([history_time, price]);
     },
     SET_BIDS(state, bids) {
       state.bids = bids;
@@ -137,17 +137,17 @@ export default new Vuex.Store({
       context.commit("ADD_BID", bid);
     },
     removeBid(context, serverMsg) {
-      const { bid_id, market, price } = serverMsg;
+      const { bid_id, market, history_time,price } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
       context.commit("UPDATE_PRICE", { market, price });
-      context.commit("ADD_HISTORY", { market, price });
+      context.commit("ADD_HISTORY", { market, history_time,price });
     },
     remove_and_update(context, serverMsg) {
-      const { bid_id, status, market, price } = serverMsg;
+      const { bid_id, status, market,history_time, price } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
       context.commit("UPDATE_STATUS", status);
       context.commit("UPDATE_PRICE", status);
-      context.commit("ADD_HISTORY", { market, price });
+      context.commit("ADD_HISTORY", { market, history_time,price });
     },
     sendMessage: async function(context, message) {
       await Vue.prototype.$socket.sendObj({ ...message });

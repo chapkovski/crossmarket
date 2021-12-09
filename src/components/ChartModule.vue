@@ -31,6 +31,9 @@ export default {
   data() {
     return {
       chartOptions: {
+        time: {
+          useUTC: false,
+        },
         chart: {
           height: "100%",
           events: {
