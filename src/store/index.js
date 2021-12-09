@@ -35,6 +35,10 @@ export default new Vuex.Store({
       const price = marketObj.price;
       return shares * price;
     },
+    cash_by_market: (state) => (market) => {
+      const marketObj = state[`market_${market}`];
+      return  marketObj.cash;
+    },
 
     total_stock_value: (state, getters) => () => {
       const A = getters.stock_value_by_market("A");

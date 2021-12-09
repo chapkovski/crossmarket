@@ -41,17 +41,43 @@
           <v-card-text>
             <v-list dense>
               <v-subheader>Info</v-subheader>
-              <v-list-item-group v-model="selectedItem" color="primary">
-                <v-list-item v-for="(item, i) in items" :key="i">
+              <v-list-item-group color="primary">
+                <v-list-item>
                   <v-list-item-icon>
-                    <v-icon v-text="item.icon"></v-icon>
+                    <v-icon>mdi-account</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title v-text="item.text"></v-list-item-title>
+                    <v-list-item-title>Money available</v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-btn icon>
-                      <v-card>{{ item.value }}</v-card>
+                      <v-card>{{ cash_available }}</v-card>
+                    </v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon>mdi-cash-fast</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Stocks you own</v-list-item-title>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn icon>
+                      <v-card> {{ stocksData.q }}</v-card>
+                    </v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon>mdi-hand-coin</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Current stock price</v-list-item-title>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn icon>
+                      <v-card> {{ stocksData.price }}</v-card>
                     </v-btn>
                   </v-list-item-action>
                 </v-list-item>
@@ -73,10 +99,18 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="orange" @click="putBuyOrder" outlined>
+            <v-btn
+              color="orange"
+              @click="putBuyOrder"
+              :disabled="bidValue > cash_available"
+            >
               Buy order
             </v-btn>
-            <v-btn color="green" @click="putSellOrder" outlined>
+            <v-btn
+              color="green"
+              @click="putSellOrder"
+              :disabled="current_num_shares < 1"
+            >
               Sell order
             </v-btn>
           </v-card-actions>
@@ -94,49 +128,33 @@
 </template>
 
 <script>
-import TransactionPrices from "@/components/TransactionPrices.vue";
 import BuyBidList from "@/components/BuyBidList.vue";
 import SellBidList from "@/components/SellBidList.vue";
-import MakeBid from "@/components/MakeBid.vue";
+
 import _ from "lodash";
 import { mapGetters, mapActions, mapState } from "vuex";
 export default {
   props: ["name", "stocksData"],
   components: {
-    TransactionPrices,
     BuyBidList,
     SellBidList,
-    MakeBid,
   },
   name: "Market",
   data() {
     return {
-      selectedItem: null,
       selectedSellingBid: null,
       bidValue: null,
       dialog: false,
-
-      items: [
-        {
-          text: "Money available",
-          icon: "mdi-account",
-          value: this.stocksData.money,
-        },
-        {
-          text: "Stocks you own",
-          icon: "mdi-cash-fast",
-          value: this.stocksData.q,
-        },
-        {
-          text: "Current stock price",
-          icon: "mdi-hand-coin",
-          value: this.stocksData.price,
-        },
-      ],
     };
   },
   computed: {
-    ...mapGetters(["filteredBids"]),
+    ...mapGetters(["filteredBids", "get_cash", "get_num_shares"]),
+    current_num_shares() {
+      return this.get_num_shares(this.name);
+    },
+    cash_available() {
+      return this.get_cash(this.name);
+    },
     ...mapState(["player_id"]),
     buyingBids() {
       return this.filteredBids({ market: this.name, type: "buy" });
@@ -160,11 +178,15 @@ export default {
     },
 
     async putBuyOrder() {
-      await this.putOrder("buy");
+      if (this.bidValue < this.cash_available) {
+        await this.putOrder("buy");
+      }
     },
 
     async putSellOrder() {
-      await this.putOrder("sell");
+      if (this.current_num_shares > 0) {
+        await this.putOrder("sell");
+      }
     },
   },
 };
