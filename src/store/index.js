@@ -11,6 +11,8 @@ export default new Vuex.Store({
     market_A: status.A,
     market_B: status.B,
     bids: [],
+    // TODO: this should be retrieved differently.
+    priceHistory: { A: [status.A.price], B: [status.B.price] },
 
     socket: {
       isConnected: false,
@@ -26,7 +28,7 @@ export default new Vuex.Store({
     },
     total_in_both_markets: (state, getters) => () => {
       const A = getters.total_in_market("A");
-      const B = getters.total_in_market("A");
+      const B = getters.total_in_market("B");
       return A + B;
     },
     stock_value_by_market: (state) => (market) => {
@@ -37,12 +39,13 @@ export default new Vuex.Store({
     },
     cash_by_market: (state) => (market) => {
       const marketObj = state[`market_${market}`];
-      return  marketObj.cash;
+      return marketObj.cash;
     },
 
     total_stock_value: (state, getters) => () => {
       const A = getters.stock_value_by_market("A");
       const B = getters.stock_value_by_market("B");
+
       return A + B;
     },
     get_cash: (state) => (market) => {
@@ -70,6 +73,9 @@ export default new Vuex.Store({
   },
 
   mutations: {
+    ADD_HISTORY(state, { market, price }) {
+      state.priceHistory[market].push(price);
+    },
     SET_BIDS(state, bids) {
       state.bids = bids;
     },
@@ -134,12 +140,14 @@ export default new Vuex.Store({
       const { bid_id, market, price } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
       context.commit("UPDATE_PRICE", { market, price });
+      context.commit("ADD_HISTORY", { market, price });
     },
     remove_and_update(context, serverMsg) {
-      const { bid_id, status } = serverMsg;
+      const { bid_id, status, market, price } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
       context.commit("UPDATE_STATUS", status);
       context.commit("UPDATE_PRICE", status);
+      context.commit("ADD_HISTORY", { market, price });
     },
     sendMessage: async function(context, message) {
       await Vue.prototype.$socket.sendObj({ ...message });

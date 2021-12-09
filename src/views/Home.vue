@@ -34,7 +34,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-                ${{ total_in_market('A') }}
+                ${{ total_in_market("A") }}
               </div>
             </div>
           </v-sheet>
@@ -71,7 +71,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-                ${{ total_in_market('B')}}
+                ${{ total_in_market("B") }}
               </div>
             </div>
           </v-sheet>
@@ -92,7 +92,7 @@
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >
-                ${{ total_stock_value }}
+                ${{ total_stock_value() }}
               </div>
             </div>
           </v-sheet>
@@ -112,7 +112,7 @@
               <div
                 class="ml-1 pa-2 red   white--text text-no-wrap rounded-pill"
               >
-                ${{ total_in_both_markets}}
+                ${{ total_in_both_markets() }}
               </div>
             </div>
           </v-sheet>
@@ -162,7 +162,12 @@ export default {
     drawer: null,
   }),
   computed: {
-    ...mapGetters(["stock_value_by_market", "total_stock_value","total_in_market", "total_in_both_markets"]),
+    ...mapGetters([
+      "stock_value_by_market",
+      "total_stock_value",
+      "total_in_market",
+      "total_in_both_markets",
+    ]),
     ...mapState(["socket", "total", "market_A", "market_B", "merged"]),
   },
   watch: {

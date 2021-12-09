@@ -16,6 +16,7 @@ var seriesOptions = [],
   seriesCounter = 0,
   names = ["MSFT", "AAPL", "GOOG"];
 import axios from "axios";
+import { mapGetters, mapActions, mapState } from "vuex";
 import Highcharts from "highcharts";
 import stockInit from "highcharts/modules/stock";
 import _ from "lodash";
@@ -40,27 +41,27 @@ export default {
         },
 
         series: [
-          {name:'AAPL',
-            type: "spline",
-            data: _.map(_.range(100), (i) => _.random(0, 100)),
-          },
-          {name:'GOOG',
-            type: "spline",
-            data: _.map(_.range(100), (i) => _.random(50, 120)),
-          },
+          { name: "A", type: "spline", data: this.seriesA },
+          { name: "B", type: "spline", data:  this.seriesB },
         ],
       },
     };
   },
+  computed: {
+    ...mapState(["priceHistory"]),
+    seriesA(){return this.priceHistory.A},
+    seriesB(){return this.priceHistory.B},
+  },
   async mounted() {
-    const appleurl =
-      "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/aapl-c.json";
-    const googleurl =
-      "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/goog-c.json";
-    const data = await axios.get(appleurl);
-    this.chartOptions.series[0].data = data.data;
-    const data2 = await axios.get(googleurl);
-    this.chartOptions.series[1].data = data2.data;
+    
+    // const appleurl =
+    //   "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/aapl-c.json";
+    // const googleurl =
+    //   "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/goog-c.json";
+    // const data = await axios.get(appleurl);
+    this.chartOptions.series[0].data = this.seriesA;
+    // const data2 = await axios.get(googleurl);
+    this.chartOptions.series[1].data = this.seriesB;
 
     this.$nextTick(() => {
       this.$refs.priceGraph.chart.setSize(null, window.innerHeight - 150);
