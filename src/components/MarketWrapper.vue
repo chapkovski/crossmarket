@@ -28,7 +28,7 @@
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="green" v-bind="attrs" v-on="on">
+          <v-btn color="green" v-bind="attrs" v-on="on" :disabled="onMarket">
             order {{ name }}
           </v-btn>
         </template>
@@ -148,7 +148,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["filteredBids", "get_cash", "get_num_shares"]),
+    ...mapGetters([
+      "filteredBids",
+      "get_cash",
+      "get_num_shares",
+      "is_trader_on_market",
+    ]),
+    onMarket() {
+      return this.is_trader_on_market(this.name);
+    },
     current_num_shares() {
       return this.get_num_shares(this.name);
     },

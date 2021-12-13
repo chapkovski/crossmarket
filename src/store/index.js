@@ -21,6 +21,13 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    is_trader_on_market: (state) => (market) => {
+      const isTraderThere = _.find(
+        state.bids,
+        _.matches({ market: market, trader: state.player_id })
+      );
+      return _.isObject(isTraderThere);
+    },
     total_in_market: (state, getters) => (market) => {
       const stock_value = getters.stock_value_by_market(market);
       const cash = state[`market_${market}`].cash;

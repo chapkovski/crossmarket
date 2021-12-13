@@ -59,8 +59,10 @@ export default {
       selectedSellingBid: null,
     };
   },
+   
   computed: {
-    ...mapGetters(["get_num_shares"]),
+    ...mapGetters(["get_num_shares", ]),
+   
     current_num_shares() {
       return this.get_num_shares(this.name);
     },
@@ -78,6 +80,7 @@ export default {
       }
     },
   },
+  
   methods: {
     ...mapActions(["sendMessage"]),
     async transact() {
