@@ -68,7 +68,13 @@ export default new Vuex.Store({
       }
     },
     filteredBids: (state) => ({ market, type }) => {
-      return _.filter(state.bids, _.matches({ market: market, type: type }));
+      const order = type === "buy" ? "desc" : "asc";
+      const bids = _.filter(
+        state.bids,
+        _.matches({ market: market, type: type })
+      );
+      const sortedBids = _.orderBy(bids, ["value"], [order]);
+      return sortedBids;
     },
   },
 
@@ -137,17 +143,17 @@ export default new Vuex.Store({
       context.commit("ADD_BID", bid);
     },
     removeBid(context, serverMsg) {
-      const { bid_id, market, history_time,price } = serverMsg;
+      const { bid_id, market, history_time, price } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
       context.commit("UPDATE_PRICE", { market, price });
-      context.commit("ADD_HISTORY", { market, history_time,price });
+      context.commit("ADD_HISTORY", { market, history_time, price });
     },
     remove_and_update(context, serverMsg) {
-      const { bid_id, status, market,history_time, price } = serverMsg;
+      const { bid_id, status, market, history_time, price } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
       context.commit("UPDATE_STATUS", status);
       context.commit("UPDATE_PRICE", status);
-      context.commit("ADD_HISTORY", { market, history_time,price });
+      context.commit("ADD_HISTORY", { market, history_time, price });
     },
     sendMessage: async function(context, message) {
       await Vue.prototype.$socket.sendObj({ ...message });
