@@ -116,6 +116,9 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-btn color="red" :disabled="!onMarket" @click="cancelBid" class="ml-2">
+        Cancel
+      </v-btn>
     </v-toolbar>
 
     <v-row
@@ -173,6 +176,13 @@ export default {
   },
   methods: {
     ...mapActions(["sendMessage"]),
+    async cancelBid() {
+      await this.sendMessage({
+        action: "cancelBid",
+        trader_id: this.player_id,
+        market: this.name,
+      });
+    },
     async putOrder(orderType) {
       await this.sendMessage({
         action: "addBid",

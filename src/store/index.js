@@ -146,14 +146,22 @@ export default new Vuex.Store({
       context.commit("SET_BIDS", bids);
     },
     addBid(context, serverMsg) {
-      const { bid } = serverMsg;
+      const { bid, bid_to_remove } = serverMsg;
+      bid_to_remove && context.commit("REMOVE_BID", bid_to_remove);
+
       context.commit("ADD_BID", bid);
     },
     removeBid(context, serverMsg) {
       const { bid_id, market, history_time, price } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
-      context.commit("UPDATE_PRICE", { market, price });
-      context.commit("ADD_HISTORY", { market, history_time, price });
+      if (price) {
+        context.commit("UPDATE_PRICE", { market, price });
+        context.commit("ADD_HISTORY", {
+          market,
+          history_time,
+          price,
+        });
+      }
     },
     remove_and_update(context, serverMsg) {
       const { bid_id, status, market, history_time, price } = serverMsg;
