@@ -140,14 +140,14 @@
             <v-btn
               color="orange"
               @click="putBuyOrder"
-              :disabled="bidValue > cash_available"
+              :disabled="!transactionAllowed('buy')"
             >
               {{ buy_order_button_text }}
             </v-btn>
             <v-btn
               color="green"
               @click="putSellOrder"
-              :disabled="current_num_shares < 1"
+              :disabled="!transactionAllowed('sell')"
             >
               {{ sell_order_button_text }}
             </v-btn>
@@ -224,6 +224,37 @@ export default {
   },
   methods: {
     ...mapActions(["sendMessage"]),
+    transactionAllowed(bid_type) {
+      if (!this.bidValue) {
+        return false;
+      }
+      if (bid_type === "sell") {
+        if (this.current_num_shares < 1) {
+          return false;
+        }
+        if (this.onMarketSize("buy")) {
+          if (
+            this.bidValue <= this.currentActiveOrder(this.name, "buy").value
+          ) {
+            return false;
+          }
+        }
+        return true;
+      }
+      if (bid_type === "buy") {
+        if (this.bidValue > this.cash_available) {
+          return false;
+        }
+        if (this.onMarketSize("sell")) {
+          if (
+            this.bidValue >= this.currentActiveOrder(this.name, "sell").value
+          ) {
+            return false;
+          }
+        }
+        return true;
+      }
+    },
     onMarketSize(bid_type) {
       return this.is_trader_on_market_size(this.name, bid_type);
     },
