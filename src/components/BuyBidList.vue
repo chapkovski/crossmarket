@@ -42,6 +42,11 @@
         <v-btn color="red" :disabled="emptyBid" @click="transact">{{
           btntext
         }}</v-btn>
+        <v-spacer></v-spacer>
+
+        <v-btn color="red" class="ml-2" @click="cancelBid" v-if="onMarketSize">
+          Cancel
+        </v-btn>
       </v-footer>
     </v-card>
   </v-col>
@@ -53,16 +58,19 @@ import _ from "lodash";
 export default {
   components: {},
   name: "BuyBidList",
-  props: ["name", "bids"],
+  props: ["name", "bids", "type"],
   data() {
     return {
       selectedSellingBid: null,
     };
   },
-   
+
   computed: {
-    ...mapGetters(["get_num_shares", ]),
-   
+    ...mapGetters(["get_num_shares", "is_trader_on_market_size"]),
+    onMarketSize() {
+      console.debug(this.is_trader_on_market_size(this.name, this.type));
+      return this.is_trader_on_market_size(this.name, this.type);
+    },
     current_num_shares() {
       return this.get_num_shares(this.name);
     },
@@ -80,9 +88,18 @@ export default {
       }
     },
   },
-  
+
   methods: {
     ...mapActions(["sendMessage"]),
+
+    async cancelBid() {
+      await this.sendMessage({
+        action: "cancelBid",
+        trader_id: this.player_id,
+        market: this.name,
+        type: this.type,
+      });
+    },
     async transact() {
       if (this.current_num_shares > 0) {
         await this.sendMessage({

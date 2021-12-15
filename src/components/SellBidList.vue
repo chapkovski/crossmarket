@@ -7,7 +7,6 @@
       <v-card-text class="overflow-y-auto" style="margin-bottom:48px">
         <v-list class="listouter1">
           <v-list-item-group
-           
             v-model="selectedSellingBid"
             active-class="border"
             color="indigo"
@@ -15,15 +14,16 @@
           >
             <div id="inner">
               <v-list-item
-              :disabled="item.trader == $store.state.player_id"
+                :disabled="item.trader == $store.state.player_id"
                 v-for="(item, i) in bids"
                 :key="i"
                 :id="`li_${item}`"
                 dense
               >
                 <v-list-item-content>
-                  <v-list-item-title>{{ item.value }}
-                      <span v-if="item.trader == $store.state.player_id">
+                  <v-list-item-title
+                    >{{ item.value }}
+                    <span v-if="item.trader == $store.state.player_id">
                       (Your own)</span
                     >
                   </v-list-item-title>
@@ -35,7 +35,13 @@
       </v-card-text>
 
       <v-footer class="bottom_footer">
-        <v-btn color="green" :disabled="emptyBid" @click="transact">{{ btntext }}</v-btn>
+        <v-btn color="green" :disabled="emptyBid" @click="transact">{{
+          btntext
+        }}</v-btn
+        ><v-spacer></v-spacer>
+         <v-btn color="red" class="ml-2" @click="cancelBid" v-if="onMarketSize">
+          Cancel
+        </v-btn>
       </v-footer>
     </v-card>
   </v-col>
@@ -46,7 +52,7 @@ import { mapGetters, mapActions, mapState } from "vuex";
 import _ from "lodash";
 export default {
   components: {},
-  props: ["name", "bids"],
+  props: ["name", "bids", 'type'],
 
   data() {
     return {
@@ -54,12 +60,19 @@ export default {
     };
   },
   computed: {
-     ...mapGetters(["get_cash"]),
+    ...mapGetters(["get_cash","is_trader_on_market_size"]),
+     onMarketSize() {
+      console.debug(this.is_trader_on_market_size(this.name, this.type));
+      return this.is_trader_on_market_size(this.name, this.type);
+    },
     cash_available() {
       return this.get_cash(this.name);
     },
     emptyBid() {
-      return _.isNil(this.selectedSellingBid) || this.cash_available < this.selectedBidValue.value;
+      return (
+        _.isNil(this.selectedSellingBid) ||
+        this.cash_available < this.selectedBidValue.value
+      );
     },
     selectedBidValue() {
       return this.bids[this.selectedSellingBid];
@@ -72,8 +85,16 @@ export default {
       }
     },
   },
-    methods: {
+  methods: {
     ...mapActions(["sendMessage"]),
+    async cancelBid() {
+      await this.sendMessage({
+        action: "cancelBid",
+        trader_id: this.player_id,
+        market: this.name,
+        type: this.type,
+      });
+    },
     async transact() {
       if (this.cash_available >= this.selectedBidValue.value) {
         await this.sendMessage({

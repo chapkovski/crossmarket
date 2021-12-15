@@ -28,7 +28,7 @@
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="green" v-bind="attrs" v-on="on" :disabled="onMarket">
+          <v-btn color="green" v-bind="attrs" v-on="on">
             order {{ name }}
           </v-btn>
         </template>
@@ -55,6 +55,35 @@
                     </v-btn>
                   </v-list-item-action>
                 </v-list-item>
+                <v-list-item v-if="onMarketSize('buy')">
+                  <v-list-item-content>
+                    <v-list-item-title
+                      >Your current buying order</v-list-item-title
+                    >
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn icon>
+                      <v-card>
+                        {{ currentActiveOrder(name, "buy").value }}</v-card
+                      >
+                    </v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+                <v-list-item v-if="onMarketSize('sell')">
+                  <v-list-item-content>
+                    <v-list-item-title
+                      >Your current selling order</v-list-item-title
+                    >
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn icon>
+                      <v-card>
+                        {{ currentActiveOrder(name, "sell").value }}</v-card
+                      >
+                    </v-btn>
+                  </v-list-item-action>
+                </v-list-item>
+
                 <v-list-item>
                   <v-list-item-icon>
                     <v-icon>mdi-cash-fast</v-icon>
@@ -100,32 +129,42 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
+              color="secondary"
+              outlined
+              @click="
+                dialog = false;
+                bidValue = null;
+              "
+              >Cancel
+            </v-btn>
+            <v-btn
               color="orange"
               @click="putBuyOrder"
               :disabled="bidValue > cash_available"
             >
-              Buy order
+              {{ buy_order_button_text }}
             </v-btn>
             <v-btn
               color="green"
               @click="putSellOrder"
               :disabled="current_num_shares < 1"
             >
-              Sell order
+              {{ sell_order_button_text }}
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-btn color="red" :disabled="!onMarket" @click="cancelBid" class="ml-2">
-        Cancel
-      </v-btn>
     </v-toolbar>
 
     <v-row
       style="height:calc(100vh - 150px);margin-top:10px;margin-bottom:10px"
     >
-      <buy-bid-list :name="name" :bids="buyingBids"></buy-bid-list>
-      <sell-bid-list :name="name" :bids="sellingBids"></sell-bid-list>
+      <buy-bid-list :name="name" :bids="buyingBids" type="buy"></buy-bid-list>
+      <sell-bid-list
+        :name="name"
+        :bids="sellingBids"
+        type="sell"
+      ></sell-bid-list>
     </v-row>
   </v-card>
 </template>
@@ -156,10 +195,19 @@ export default {
       "get_cash",
       "get_num_shares",
       "is_trader_on_market",
+      "is_trader_on_market_size",
+      "currentActiveOrder",
     ]),
+    buy_order_button_text() {
+      return this.onMarketSize("buy") ? "Replace buy" : "Buy order";
+    },
+    sell_order_button_text() {
+      return this.onMarketSize("sell") ? "Replace sell" : "Sell order";
+    },
     onMarket() {
       return this.is_trader_on_market(this.name);
     },
+
     current_num_shares() {
       return this.get_num_shares(this.name);
     },
@@ -176,13 +224,10 @@ export default {
   },
   methods: {
     ...mapActions(["sendMessage"]),
-    async cancelBid() {
-      await this.sendMessage({
-        action: "cancelBid",
-        trader_id: this.player_id,
-        market: this.name,
-      });
+    onMarketSize(bid_type) {
+      return this.is_trader_on_market_size(this.name, bid_type);
     },
+
     async putOrder(orderType) {
       await this.sendMessage({
         action: "addBid",
@@ -196,7 +241,7 @@ export default {
     },
 
     async putBuyOrder() {
-      if (this.bidValue < this.cash_available) {
+      if (this.bidValue <= this.cash_available) {
         await this.putOrder("buy");
       }
     },
@@ -209,30 +254,36 @@ export default {
   },
 };
 </script>
+
 <style>
 .small {
   font-size: 1rem;
 }
+
 .border {
   border: 2px dashed orange;
 }
+
 .listouter1 {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
+
 .listouter2 {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column-reverse;
   overflow-y: scroll;
 }
+
 .bottom_footer {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
 }
+
 .buysellcard {
   height: 95%;
 }
