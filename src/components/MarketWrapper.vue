@@ -222,10 +222,12 @@ export default {
       return this.filteredBids({ market: this.name, type: "sell" });
     },
   },
-  watch:{
-    dialog(val){
-      if (!val) {this.bidValue=null}
-    }
+  watch: {
+    dialog(val) {
+      if (!val) {
+        this.bidValue = null;
+      }
+    },
   },
   methods: {
     ...mapActions(["sendMessage"]),
@@ -238,9 +240,9 @@ export default {
           return false;
         }
         if (this.onMarketSize("buy")) {
-          console.debug("what gonna on??");
           if (
-            this.bidValue <= this.currentActiveOrder(this.name, "buy").value
+            parseFloat(this.bidValue) <=
+            parseFloat(this.currentActiveOrder(this.name, "buy").value)
           ) {
             return false;
           }
@@ -253,11 +255,13 @@ export default {
         }
         if (this.onMarketSize("sell")) {
           if (
-            this.bidValue >= this.currentActiveOrder(this.name, "sell").value
+            parseFloat(this.bidValue) >=
+            parseFloat(this.currentActiveOrder(this.name, "sell").value)
           ) {
             return false;
           }
         }
+        console.debug("before returning TRUE!");
         return true;
       }
     },
