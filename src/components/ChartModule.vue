@@ -44,8 +44,8 @@ export default {
         },
 
         series: [
-          { name: "A", type: "spline", data: this.seriesA },
-          { name: "B", type: "spline", data: this.seriesB },
+          { name: "A", type: "line", data: this.seriesA },
+          { name: "B", type: "line", data: this.seriesB },
         ],
       },
     };
