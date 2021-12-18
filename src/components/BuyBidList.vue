@@ -60,13 +60,22 @@ export default {
   name: "BuyBidList",
   props: ["name", "bids", "type"],
   data() {
-    return {
-      selectedSellingBid: null,
-    };
+    return {};
   },
 
   computed: {
+    ...mapState(["player_id"]),
     ...mapGetters(["get_num_shares", "is_trader_on_market_size"]),
+    selectedSellingBid() {
+      if (this.bids.length > 0) {
+        const firstBid = this.bids[0];
+        if (firstBid.trader !== this.player_id) {
+          
+          return 0;
+        }
+      }
+      return null;
+    },
     onMarketSize() {
       console.debug(this.is_trader_on_market_size(this.name, this.type));
       return this.is_trader_on_market_size(this.name, this.type);

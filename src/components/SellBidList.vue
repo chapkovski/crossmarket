@@ -39,7 +39,7 @@
           btntext
         }}</v-btn
         ><v-spacer></v-spacer>
-         <v-btn color="red" class="ml-2" @click="cancelBid" v-if="onMarketSize">
+        <v-btn color="red" class="ml-2" @click="cancelBid" v-if="onMarketSize">
           Cancel
         </v-btn>
       </v-footer>
@@ -52,16 +52,25 @@ import { mapGetters, mapActions, mapState } from "vuex";
 import _ from "lodash";
 export default {
   components: {},
-  props: ["name", "bids", 'type'],
+  props: ["name", "bids", "type"],
 
   data() {
-    return {
-      selectedSellingBid: null,
-    };
+    return {};
   },
   computed: {
-    ...mapGetters(["get_cash","is_trader_on_market_size"]),
-     onMarketSize() {
+    ...mapState(["player_id"]),
+    ...mapGetters(["get_cash", "is_trader_on_market_size"]),
+    selectedSellingBid() {
+      if (this.bids.length > 0) {
+        const firstBid = this.bids[0];
+        if (firstBid.trader !== this.player_id) {
+          return 0;
+        }
+      }
+      return null;
+    },
+
+    onMarketSize() {
       console.debug(this.is_trader_on_market_size(this.name, this.type));
       return this.is_trader_on_market_size(this.name, this.type);
     },
