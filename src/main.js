@@ -16,8 +16,10 @@ Vue.use(VueNativeSock, ws_path, {
   reconnectionAttempts: 5,
   reconnectionDelay: 3000,
 });
+import vueAwesomeCountdown from "vue-awesome-countdown";
 
 Vue.config.productionTip = false;
+Vue.use(vueAwesomeCountdown, "vac");
 
 new Vue({
   store,

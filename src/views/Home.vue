@@ -150,11 +150,12 @@
 
 <script>
 import _ from "lodash";
+import Timer from "@/components/Timer";
 import Market from "@/components/MarketWrapper";
 import { mapActions, mapState, mapGetters } from "vuex";
 import TransactionPrices from "@/components/TransactionPrices.vue";
 export default {
-  components: { Market, TransactionPrices },
+  components: { Market, TransactionPrices,Timer },
   data: () => ({
     cards: ["Today", "Yesterday"],
     innerList: _.range(1, 10),

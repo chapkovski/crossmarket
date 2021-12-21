@@ -16,6 +16,7 @@
     "highcharts-vue": "^1.4.0",
     "lodash": "^4.17.21",
     "vue": "^2.6.11",
+    "vue-awesome-countdown": "^1.1.4",
     "vue-native-websocket": "^2.0.15",
     "vue-router": "^3.2.0",
     "vuetify": "^2.4.0",
