@@ -157,7 +157,7 @@
     </v-toolbar>
 
     <v-row
-      style="height:calc(100vh - 150px);margin-top:10px;margin-bottom:10px"
+      style="height:calc(100vh - 190px);margin-top:20px;margin-bottom:10px"
     >
       <buy-bid-list :name="name" :bids="buyingBids" type="buy"></buy-bid-list>
       <sell-bid-list
