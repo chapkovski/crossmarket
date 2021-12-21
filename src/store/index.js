@@ -116,6 +116,7 @@ export default new Vuex.Store({
       }
     },
     ADD_BID(state, bid) {
+      bid.value=parseFloat(bid.value);
       state.bids.push(bid);
     },
     REMOVE_BID(state, bid_id) {
