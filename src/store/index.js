@@ -116,7 +116,7 @@ export default new Vuex.Store({
       }
     },
     ADD_BID(state, bid) {
-      bid.value=parseFloat(bid.value);
+      bid.value = parseFloat(bid.value);
       state.bids.push(bid);
     },
     REMOVE_BID(state, bid_id) {
@@ -148,6 +148,15 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async endingGame({ state, dispatch }) {
+     
+      await dispatch("sendMessage", {
+        action: "gameEnds",
+       
+        
+      });
+      document.getElementById("form").submit();
+    },
     getServerConfirmation(context, i) {
       console.debug(i);
     },
@@ -181,8 +190,14 @@ export default new Vuex.Store({
       context.commit("UPDATE_PRICE", status);
       context.commit("ADD_HISTORY", { market, history_time, price });
     },
-    sendMessage: async function(context, message) {
-      await Vue.prototype.$socket.sendObj({ ...message });
+    sendMessage: async function({state}, message) {
+       const { market_A, market_B, player_id } = state;
+      
+      await Vue.prototype.$socket.sendObj({
+        player_id,
+        marketData: { market_A, market_B },
+        ...message,
+      });
     },
   },
   modules: {},

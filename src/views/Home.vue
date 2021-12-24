@@ -86,10 +86,11 @@ export default {
   },
   methods: {
     async submit() {
-      await this.sendMessage({ name: "Decision_ends" });
-      document.getElementById("form").submit();
+      
+      await this.endingGame();
+      
     },
-    ...mapActions(["sendMessage"]),
+    ...mapActions(["sendMessage", 'endingGame']),
     availableMoney(market) {
       if (this.merged) {
         return this.total.cash;
