@@ -158,7 +158,6 @@ export default new Vuex.Store({
       console.debug(i);
     },
     setBids(context, serverMsg) {
-      console.debug(serverMsg);
       const { bids } = serverMsg;
       context.commit("SET_BIDS", bids);
     },
@@ -169,7 +168,7 @@ export default new Vuex.Store({
       context.commit("ADD_BID", bid);
     },
     from_huey(context, serverMsg) {
-      console.debug("MESSAGE MOTHER FUCKER!!!");
+      console.debug("MESSAGE MOTHER FUCKER!!!", JSON.stringify(serverMsg));
     },
     removeBid(context, serverMsg) {
       const { bid_id, market, history_time, price } = serverMsg;

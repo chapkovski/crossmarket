@@ -59,7 +59,6 @@ export default {
   },
   watch: {
     socket(v) {
-      console.debug(v);
       if (v.isConnected) {
         this.sendMessage({ app: "Mounted!" });
       }
@@ -86,11 +85,9 @@ export default {
   },
   methods: {
     async submit() {
-      
       await this.endingGame();
-      
     },
-    ...mapActions(["sendMessage", 'endingGame']),
+    ...mapActions(["sendMessage", "endingGame"]),
     availableMoney(market) {
       if (this.merged) {
         return this.total.cash;

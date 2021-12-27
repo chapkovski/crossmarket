@@ -52,7 +52,6 @@ export default {
   },
   watch: {
     priceHistory() {
-      console.debug("SOME THINGSNAGES???");
       this.$nextTick(() => {
         this.$refs.priceGraph.chart.setSize(
           window.inneWidth - 100,
