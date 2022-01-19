@@ -71,13 +71,9 @@ export default {
     },
   },
   mounted() {
-    // const appleurl =
-    //   "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/aapl-c.json";
-    // const googleurl =
-    //   "https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/goog-c.json";
-    // const data = await axios.get(appleurl);
+   
     this.chartOptions.series[0].data = this.seriesA;
-    // const data2 = await axios.get(googleurl);
+    
     this.chartOptions.series[1].data = this.seriesB;
 
     this.$nextTick(() => {
