@@ -30,9 +30,12 @@
                     <span v-if="item.trader == $store.state.player_id">
                       (Your own)</span
                     >
-                    <span v-if="item.trader__virtual">
+                    <span v-if="item.trader__virtual && !item.trader__is_mm">
                       (V{{ item.trader }})</span
                     >
+                    <span v-if="item.trader__is_mm">
+                      (MM)
+                    </span>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -80,7 +83,6 @@ export default {
       return null;
     },
     onMarketSize() {
-      
       return this.is_trader_on_market_size(this.name, this.type);
     },
     current_num_shares() {
@@ -119,7 +121,6 @@ export default {
           bid_id: this.selectedBidValue.id,
         });
       }
-      this.selectedSellingBid = null;
     },
   },
 };

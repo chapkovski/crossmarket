@@ -97,7 +97,6 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    
     SET_BIDS(state, bids) {
       state.bids = bids;
     },
@@ -157,7 +156,15 @@ export default new Vuex.Store({
       console.debug(i);
     },
     setBids(context, serverMsg) {
-      const { bids } = serverMsg;
+      const { bids, status, market, price } = serverMsg;
+      console.debug("JOPAJOPA JOPA", status, bids);
+      if (price) {
+        context.commit("UPDATE_PRICE", { market, price });
+      }
+      if (status) {
+        context.commit("UPDATE_STATUS", status);
+        context.commit("UPDATE_PRICE", status);
+      }
       context.commit("SET_BIDS", bids);
     },
     addBid(context, serverMsg) {
@@ -174,15 +181,13 @@ export default new Vuex.Store({
       context.commit("REMOVE_BID", bid_id);
       if (price) {
         context.commit("UPDATE_PRICE", { market, price });
-     
       }
     },
     remove_and_update(context, serverMsg) {
-      const { bid_id, status, } = serverMsg;
+      const { bid_id, status } = serverMsg;
       context.commit("REMOVE_BID", bid_id);
       context.commit("UPDATE_STATUS", status);
       context.commit("UPDATE_PRICE", status);
-      
     },
     sendMessage: async function({ state }, message) {
       const { market_A, market_B, player_id } = state;
