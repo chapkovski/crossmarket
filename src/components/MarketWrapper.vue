@@ -20,7 +20,7 @@
             <v-list-item-title>Current price {{ name }}: </v-list-item-title>
           </v-list-item-content>
           <v-list-item-action class="font-weight-bold ">
-            {{ stocksData.price }}
+            {{ stocksData.price.toFixed(2) }}
           </v-list-item-action>
         </v-list-item>
       </v-sheet>

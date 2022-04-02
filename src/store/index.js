@@ -157,7 +157,7 @@ export default new Vuex.Store({
     },
     setBids(context, serverMsg) {
       const { bids, status, market, price } = serverMsg;
-      console.debug("JOPAJOPA JOPA", status, bids);
+      
       if (price) {
         context.commit("UPDATE_PRICE", { market, price });
       }
