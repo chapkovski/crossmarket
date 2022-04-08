@@ -2,13 +2,13 @@
   <v-card class="v-100" fill-height style="height:90vh">
     <v-toolbar height="80">
       <v-sheet class="mx-1 d-flex rounded-l-xl font-weight-bold  " outlined>
-        <v-list-item>Market {{ name }}.</v-list-item>
+        <v-list-item>Mercato {{ name }}.</v-list-item>
       </v-sheet>
       <v-sheet class="mx-0 d-flex " outlined>
         <v-list-item>
           <v-list-item-content> </v-list-item-content>
 
-          Number of shares:
+         Numero di Azioni:
         </v-list-item>
         <v-list-item-action class="font-weight-bold">
           {{ stocksData.q }}
@@ -17,7 +17,7 @@
       <v-sheet outlined class="mx-1 rounded-r-xl ">
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title>Current price {{ name }}: </v-list-item-title>
+            <v-list-item-title>Prezzo Corrente {{ name }}: </v-list-item-title>
           </v-list-item-content>
           <v-list-item-action class="font-weight-bold ">
             {{ stocksData.price.toFixed(2) }}
@@ -29,13 +29,13 @@
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on, attrs }">
           <v-btn color="green" v-bind="attrs" v-on="on">
-            order {{ name }}
+            Ordina {{ name }}
           </v-btn>
         </template>
 
         <v-card>
           <v-card-title class="text-h5 grey lighten-2">
-            Put a selling/buying bid for Market {{ name }}
+            Immetti un ordine di vendita/acquisto per il Mercato {{ name }}
           </v-card-title>
 
           <v-card-text>
@@ -47,7 +47,7 @@
                     <v-icon>mdi-account</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title>Money available</v-list-item-title>
+                    <v-list-item-title>Contante Disponibile</v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-btn icon>
@@ -89,7 +89,7 @@
                     <v-icon>mdi-cash-fast</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title>Stocks you own</v-list-item-title>
+                    <v-list-item-title>Azioni</v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-btn icon>
@@ -102,7 +102,7 @@
                     <v-icon>mdi-hand-coin</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title>Current stock price</v-list-item-title>
+                    <v-list-item-title>Prezzo corrente</v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-btn icon>
@@ -114,12 +114,12 @@
             </v-list>
             <v-text-field
               v-model="bidValue"
-              label="Price"
+              label="Prezzo"
               solo
-              placeholder="Price"
+              placeholder="Prezzo"
               type="number"
               autofocus
-              hint="insert a price and click the corresponding  button"
+              hint="inserire un prezzo e cliccare sul pulsante corrispondente"
               required
             ></v-text-field>
           </v-card-text>
@@ -135,7 +135,7 @@
                 dialog = false;
                 bidValue = null;
               "
-              >Cancel
+              >Cancella
             </v-btn>
             <v-btn
               color="orange"
@@ -199,10 +199,10 @@ export default {
       "currentActiveOrder",
     ]),
     buy_order_button_text() {
-      return this.onMarketSize("buy") ? "Replace buy" : "Buy order";
+      return this.onMarketSize("buy") ? "Sostituire l'ordine di Acquisto" : "Ordine di Acquisto";
     },
     sell_order_button_text() {
-      return this.onMarketSize("sell") ? "Replace sell" : "Sell order";
+      return this.onMarketSize("sell") ? "Sostituire l'ordine di Vendita" : "Ordine di Vendita";
     },
     onMarket() {
       return this.is_trader_on_market(this.name);

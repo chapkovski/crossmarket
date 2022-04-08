@@ -7,7 +7,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn  color="green" dark v-bind="attrs" v-on="on" class="m-1" width="150">
-        Price history 
+        Storico dei Prezzi
       </v-btn>
     </template>
 

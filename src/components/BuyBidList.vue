@@ -6,7 +6,7 @@
       style="height:95%"
     >
       <v-app-bar class="flex-grow-0" dense>
-        Buying bids
+        Offerte di Acquisto
       </v-app-bar>
       <v-card-text class="overflow-y-auto" style="margin-bottom:48px">
         <v-list class="listouter1">
@@ -96,9 +96,9 @@ export default {
     },
     btntext() {
       if (this.emptyBid) {
-        return "Sell";
+        return "Vendi";
       } else {
-        return `Sell 1 ${this.name} for ${this.selectedBidValue.value}`;
+        return `Vendi 1 ${this.name} per ${this.selectedBidValue.value}`;
       }
     },
   },

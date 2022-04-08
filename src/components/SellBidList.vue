@@ -2,7 +2,7 @@
   <v-col style="height:100%" class="mx-3 d-flex flex-column my-1">
     <v-card class="d-flex flex-column buysellcard" fill-height>
       <v-app-bar class="flex-grow-0" dense>
-        Selling bids
+        Offerte di Vendita
       </v-app-bar>
       <v-card-text class="overflow-y-auto" style="margin-bottom:48px">
         <v-list class="listouter1">
@@ -93,9 +93,9 @@ export default {
     },
     btntext() {
       if (this.emptyBid) {
-        return "Buy";
+        return "Compra";
       } else {
-        return `Buy 1 ${this.name} for ${this.selectedBidValue.value}`;
+        return `Compra 1 ${this.name} per ${this.selectedBidValue.value}`;
       }
     },
   },

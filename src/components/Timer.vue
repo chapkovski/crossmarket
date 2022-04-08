@@ -2,7 +2,7 @@
   <v-card class="ma-1 d-flex justify-center align-center" color="red" height=80>
     
     <v-card-text>
-      Time left:
+      Tempo Rimanente:
       <v-chip color="primary">
         <countdown
           :left-time="timeLeft"
