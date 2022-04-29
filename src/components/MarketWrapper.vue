@@ -106,7 +106,7 @@
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-btn icon>
-                      <v-card> {{ stocksData.price }}</v-card>
+                      <v-card> {{ stocksData.price.toFixed(2) }}</v-card>
                     </v-btn>
                   </v-list-item-action>
                 </v-list-item>

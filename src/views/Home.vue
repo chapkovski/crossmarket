@@ -8,7 +8,7 @@
       >
         <div class="d-flex flex-row">
           <v-sheet outlined class="d-flex align-center rounded-l-xl pa-2 ">
-            <div class="d-flex align-center  ">Trading day:
+            <div class="d-flex align-center  ">Periodo:
               <div
                 class="ml-1 pa-2 primary   white--text text-no-wrap rounded-pill"
               >

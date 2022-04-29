@@ -1,6 +1,9 @@
 <template>
-  <v-card class="ma-1 d-flex justify-center align-center" color="red" height=80>
-    
+  <v-card
+    class="ma-1 d-flex justify-center align-center"
+    color="red"
+    height="80px"
+  >
     <v-card-text>
       Tempo Rimanente:
       <v-chip color="primary">
