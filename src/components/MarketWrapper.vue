@@ -51,7 +51,7 @@
                   </v-list-item-content>
                   <v-list-item-action>
                     <v-btn icon>
-                      <v-card>{{ cash_available }}</v-card>
+                      <v-card>{{ cash_available.toFixed(2) }}</v-card>
                     </v-btn>
                   </v-list-item-action>
                 </v-list-item>
@@ -112,7 +112,10 @@
                 </v-list-item>
               </v-list-item-group>
             </v-list>
+            <v-form v-model="valid">
+              
             <v-text-field
+               :rules="[rules.required, rules.min]"
               v-model="bidValue"
               label="Prezzo"
               solo
@@ -122,6 +125,7 @@
               hint="inserire un prezzo e cliccare sul pulsante corrispondente"
               required
             ></v-text-field>
+          </v-form>
           </v-card-text>
 
           <v-divider></v-divider>
@@ -184,9 +188,14 @@ export default {
   name: "Market",
   data() {
     return {
+      valid:true,
       selectedSellingBid: null,
       bidValue: null,
       dialog: false,
+      rules: {
+          required: value => !!value || 'Required.',
+          min: value => value >0  || 'You should enter any positive value here',
+      }
     };
   },
   computed: {
@@ -232,6 +241,7 @@ export default {
   methods: {
     ...mapActions(["sendMessage"]),
     transactionAllowed(bid_type) {
+      if (!this.valid) {return false}
       if (!this.bidValue) {
         return false;
       }
